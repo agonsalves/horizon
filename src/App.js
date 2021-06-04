@@ -1,25 +1,47 @@
-import logo from './logo.svg';
-import './App.css';
+import {useSprings} from 'react-spring'
+import {
+    Bar,
+    Container,
+    Horizon
+}                   from './Elements'
 
-function App() {
-  return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
-  );
+const App = () => {
+
+    const totalHeight = 1000
+    const barEndHeight = 100
+    const numBars = 10
+    const duration = 10000
+
+    const [springs, api] = useSprings(numBars, index => ({
+        from: {
+            height: 0,
+            y: 0
+        },
+        delay: index * (duration / numBars),
+        loop: true,
+        to: {
+            height: barEndHeight,
+            y: totalHeight + barEndHeight,
+        },
+        config: {
+            duration
+        }
+    }))
+
+    api.start(index => ({
+        height: barEndHeight,
+        y: totalHeight + barEndHeight
+    }))
+
+    return (
+        <Container>
+            <Horizon>
+                {springs.map(({height, y}, index) =>
+                    <Bar style={{height, y}} key={index}/>
+                )}
+            </Horizon>
+        </Container>
+    )
 }
 
 export default App;
